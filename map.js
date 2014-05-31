@@ -6,37 +6,33 @@ $(document).ready(function() {
         // options here
     }).setView([35.596, -82.55], 14);
 
-    var busStops = L.tileLayer.wms("http://opendataserver.ashevillenc.gov/geoserver/ows", {
-	layers: 'coa_bus_stops',
-	format: 'image/png',
-	transparent: true,
-	attribution: "Bus stops"
-    });
-
-
-    var routes = L.tileLayer.wms("http://opendataserver.ashevillenc.gov/geoserver/ows", {
-	layers: 'coa_transit_bus_routes',
-	format: 'image/png',
-	transparent: true,
-	attribution: "Bus routes"
-    });
-
-
     var osmBaseLayer = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 18
-    });
+    }).addTo(map);
 
+    var busStops = L.tileLayer.wms("http://opendataserver.ashevillenc.gov/geoserver/ows", {
+	    layers: 'coa_bus_stops',
+	    format: 'image/png',
+	    transparent: true,
+	    attribution: "Bus stops"
+    }).addTo(map);
 
+    var routes = L.tileLayer.wms("http://opendataserver.ashevillenc.gov/geoserver/ows", {
+	    layers: 'coa_transit_bus_routes',
+	    format: 'image/png',
+	    transparent: true,
+	    attribution: "Bus routes"
+    }).addTo(map);
 
     var layerControl = L.control.layers(
-	{
+	    {
             'Open Street Map' : osmBaseLayer
-	},
-	{
-	    'Routes': routes,
-	    'Stops': busStops
-	}, 
-	{}).addTo(map);
+	    },
+	    {
+	        'Routes': routes,
+	        'Stops': busStops
+	    }, 
+	    {}).addTo(map);
 
 
 var markers = [];

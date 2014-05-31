@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    var restEndpoint = 'http://api.ashevilletechevents.com/api/locations';
+    //var restEndpoint = './mock.json';
     var cloudmade_api_key = "8ee2a50541944fb9bcedded5165f09d9";
 
     var map = L.map('map', {
@@ -11,7 +13,7 @@ $(document).ready(function() {
     }).addTo(map);
 
     var busStops = L.tileLayer.wms("http://opendataserver.ashevillenc.gov/geoserver/ows", {
-	    layers: 'coa_bus_stops',
+	    layers: 'coa_transit_bus_stops',
 	    format: 'image/png',
 	    transparent: true,
 	    attribution: "Bus stops"
@@ -35,47 +37,37 @@ $(document).ready(function() {
 	    {}).addTo(map);
 
 
-var markers = [];
+var busMarkers = [];
+    getBusLocations();
 
 // this will refresh the map every 10 seconds
-/*
 var interval = setInterval(function() {
-    refreshMap();
+    getBusLocations();
 }, 10000);
-*/
 
+    var busLayerGroup = null;
 
-// will update position of each marker
-function refreshMap() {
-    $.each(markers, function(marker, i) {
-	if (map.hasLayer(marker)) {
-	    map.removeLayer(marker);
+function getBusLocations() {
+    $.getJSON(restEndpoint, function(buses) {
+	busMarkers.length = 0;
+	$.each(buses, function(i, bus) {
+	    translateJson(bus);
+
+	});
+
+	if (busLayerGroup !== null) {
+	    map.removeLayer(busLayerGroup);
 	}
 
-	map.addLayer(marker);
+	busLayerGroup =	L.layerGroup(busMarkers);
+	busLayerGroup.addTo(map);
     });
 }
 
-
-function getJson() {
-
-// todo translate
-
-//    $.each(jsonArray
-
-}
-
-
-function translateJson(obj) {
-
-    var latlng = new L.latLng(obj.lat, obj.lon);
-
-    var marker = L.marker(latlng, {
-	// todo, marker options
-    });
-
-    markers[obj.id] = marker;
-
+function translateJson(bus) {
+    var latlng = new L.latLng(bus.location.lat, bus.location.lon);
+    var marker = L.marker(latlng, { });
+    busMarkers.push(marker);
 }
 
 });

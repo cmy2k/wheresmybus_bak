@@ -6,24 +6,81 @@ $(document).ready(function() {
         // options here
     }).setView([35.596, -82.55], 14);
 
-
-/*
-    var cloudmadeBaseLayer = L.tileLayer("http://{s}.tile.cloudmade.com/" + cloudmade_api_key + "/997/256/{z}/{x}/{y}.png", {
-        //            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-        maxZoom: 18
+    var busStops = L.tileLayer.wms("http://opendataserver.ashevillenc.gov/geoserver/ows", {
+	layers: 'coa_bus_stops',
+	format: 'image/png',
+	transparent: true,
+	attribution: "Bus stops"
     });
-*/
+
+
+    var routes = L.tileLayer.wms("http://opendataserver.ashevillenc.gov/geoserver/ows", {
+	layers: 'coa_transit_bus_routes',
+	format: 'image/png',
+	transparent: true,
+	attribution: "Bus routes"
+    });
+
 
     var osmBaseLayer = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 18
-    }).addTo(map);
+    });
 
 
+
+    var layerControl = L.control.layers(
+	{
+            'Open Street Map' : osmBaseLayer
+	},
+	{
+	    'Routes': routes,
+	    'Stops': busStops
+	}, 
+	{}).addTo(map);
+
+
+var markers = [];
+
+// this will refresh the map every 10 seconds
 /*
-    var layerControl = L.control.layers({
-        'Open Street Map' : osmBaseLayer,
-        'Cloudmade' : cloudmadeBaseLayer
-    }).addTo(map);
+var interval = setInterval(function() {
+    refreshMap();
+}, 10000);
 */
-  
+
+
+// will update position of each marker
+function refreshMap() {
+    $.each(markers, function(marker, i) {
+	if (map.hasLayer(marker)) {
+	    map.removeLayer(marker);
+	}
+
+	map.addLayer(marker);
+    });
+}
+
+
+function getJson() {
+
+// todo translate
+
+//    $.each(jsonArray
+
+}
+
+
+function translateJson(obj) {
+
+    var latlng = new L.latLng(obj.lat, obj.lon);
+
+    var marker = L.marker(latlng, {
+	// todo, marker options
+    });
+
+    markers[obj.id] = marker;
+
+}
+
 });
+

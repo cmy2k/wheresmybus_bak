@@ -36,8 +36,9 @@ $(document).ready(function() {
 	    }, 
 	    {}).addTo(map);
 
+    map.addControl( new L.Control.Gps() );
 
-var busMarkers = [];
+    var busMarkers = [];
     getBusLocations();
 
 // this will refresh the map every 10 seconds

@@ -36,38 +36,39 @@ $(document).ready(function() {
 	    }, 
 	    {}).addTo(map);
 
-    var busMarkers = [];
+    L.control.locate().addTo(map);
+
     getBusLocations();
 
-// this will refresh the map every 10 seconds
-var interval = setInterval(function() {
-    getBusLocations();
-}, 10000);
+    // this will refresh the map every 10 seconds
+    var interval = setInterval(function() {
+        getBusLocations();
+    }, 10000);
 
     var busLayerGroup = null;
 
-function getBusLocations() {
-    $.getJSON(restEndpoint, function(buses) {
-	busMarkers.length = 0;
-	$.each(buses, function(i, bus) {
-	    translateJson(bus);
+    function getBusLocations() {
+        $.getJSON(restEndpoint, function(buses) {
+	        busMarkers.length = 0;
+	        $.each(buses, function(i, bus) {
+	            translateJson(bus);
 
-	});
+	        });
 
-	if (busLayerGroup !== null) {
-	    map.removeLayer(busLayerGroup);
-	}
+	        if (busLayerGroup !== null) {
+	            map.removeLayer(busLayerGroup);
+	        }
 
-	busLayerGroup =	L.layerGroup(busMarkers);
-	busLayerGroup.addTo(map);
-    });
-}
+	        busLayerGroup =	L.layerGroup(busMarkers);
+	        busLayerGroup.addTo(map);
+        });
+    }
 
-function translateJson(bus) {
-    var latlng = new L.latLng(bus.location.lat, bus.location.lon);
-    var marker = L.marker(latlng, { });
-    busMarkers.push(marker);
-}
+    function translateJson(bus) {
+        var latlng = new L.latLng(bus.location.lat, bus.location.lon);
+        var marker = L.marker(latlng, { });
+        busMarkers.push(marker);
+    }
 
 });
 

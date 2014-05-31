@@ -36,8 +36,6 @@ $(document).ready(function() {
 	    }, 
 	    {}).addTo(map);
 
-    map.addControl( new L.Control.Gps() );
-
     var busMarkers = [];
     getBusLocations();
 
